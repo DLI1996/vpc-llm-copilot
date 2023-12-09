@@ -18,16 +18,19 @@ bnb_config = BitsAndBytesConfig(
     bnb_4bit_compute_dtype=torch.bfloat16
 )
 base_model = AutoModelForCausalLM.from_pretrained(
-    base_model_id, 
-    quantization_config=bnb_config, 
+    base_model_id,
+    quantization_config=bnb_config,
     device_map="auto",
     trust_remote_code=True
 )
-tokenizer = AutoTokenizer.from_pretrained(base_model_id, add_bos_token=True, trust_remote_code=True)
+tokenizer = AutoTokenizer.from_pretrained(
+    base_model_id, add_bos_token=True, trust_remote_code=True)
 path_llm_model = "08_Lora_and_Rag/00_trained_lora_model/lora_finetuning/llama2-7b-AmazonVPC-finetune/checkpoint-500"
 ft_model = PeftModel.from_pretrained(base_model, path_llm_model)
 
 # Custom LLM Chat Model Class
+
+
 class CustomLLMChatModel:
     def __init__(self, model, tokenizer):
         # super().__init__()
@@ -39,12 +42,14 @@ class CustomLLMChatModel:
         self.model.eval()
         with torch.no_grad():
             output = self.model.generate(**model_input, max_new_tokens=500)[0]
-            raw_output = self.tokenizer.decode(output, skip_special_tokens=True)
+            raw_output = self.tokenizer.decode(
+                output, skip_special_tokens=True)
             return raw_output.split("### Answer:")[-1].strip()
 
     @property
     def _identifying_params(self):  # Optional _identifying_params property
         return {"model": str(self.model), "tokenizer": str(self.tokenizer)}
+
 
 # Load environment variables
 load_dotenv()
@@ -55,10 +60,13 @@ index_name = "document-embeddings"
 environment = "gcp-starter"
 
 # Function to convert text to vector using OpenAI Embeddings
+
+
 def text_to_vector(text, model="text-embedding-ada-002"):
     text = text.replace("\n", " ")
     res = client.embeddings.create(input=[text], model=model)
     return res.data[0].embedding
+
 
 # Initialize Pinecone
 pinecone.init(api_key=pinecone_key, environment=environment)
@@ -86,7 +94,8 @@ custom_llm_model = CustomLLMChatModel(ft_model, tokenizer)
 #                                         chain_type_kwargs={"prompt": prompt_for_chain})
 
 # Read CSV File
-test_df = pd.read_csv('06_Data/Capstone_Data/documentation_qa_datasets/Final_FILTERED_TEST_Question_Answer_Pairs.csv')
+test_df = pd.read_csv(
+    '06_Data/Capstone_Data/documentation_qa_datasets/Final_FILTERED_TEST_Question_Answer_Pairs.csv')
 
 # Select a subset of the data for testing, e.g., 10%
 subset_percentage = 0.1
@@ -101,12 +110,13 @@ for idx, row in test_subset.iterrows():
     # Query Pinecone index with the vector
     query_results = index.query(
         vector=question_vector,
-        top_k=3,  # Adjust 'top_k' as needed
+        top_k=4,  # Adjust 'top_k' as needed
         include_metadata=True  # Ensure metadata is included in the results
     )
 
     # Extracting text from query results
-    context = ' '.join([match['metadata']['text'] for match in query_results['matches']])
+    context = ' '.join([match['metadata']['text']
+                       for match in query_results['matches']])
 
     # Generate prompt with context and question using the ans_template
     full_prompt = ans_template.format(context=context, question=question)
@@ -116,4 +126,5 @@ for idx, row in test_subset.iterrows():
     test_df.loc[idx, 'llm_answer'] = llm_answer
 
 # Save Results to New CSV
-test_df.to_csv('06_Data/Capstone_Data/llm_testing_results/lora_plus_rag_testing_output.csv', index=False)
+test_df.to_csv(
+    '06_Data/Capstone_Data/llm_testing_results/lora_plus_rag_testing_output.csv', index=False)
