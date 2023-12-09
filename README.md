@@ -1,27 +1,21 @@
-# LLM-Product-Assistant: Your Intelligent Product Guide
+# LLM-Product-Assistant
 
 ## Overview
 
-The LLM-Product-Assistant is an interactive Q&A system designed to help users understand and navigate the functionalities of a particular product. It features role-based conversations, adapting the dialogue to fit the user's level of expertise, be it a teenager or a mechanical engineer.
+The LLM-Product-Assistant is an interactive Q&A system designed to help users to better understand and navigate the functionalities of a particular product. For this specific project, we focused on troubleshooting issues users might have with Amazon VPC.
 
 ## Table of Contents
 
-1. [Key Features](#key-features)
-2. [Technologies Deployed](#technologies-deployed)
-3. [Installation & Setup](#installation--setup)
-4. [Contributors](#contributors)
-
-## Key Features
-
-- Role-Based Conversations: Tailored dialogues based on the user's expertise.
-- Multilingual Support: Accessibility across language barriers.
+1. [Technologies Deployed](#technologies-deployed)
+2. [Installation & Setup](#installation--setup)
+3. [Contributors](#contributors)
 
 ## Technologies Deployed
 
-- **Amazon Titan**: For text summarization.
-- **Claude**: Handling the Q&A functionality.
-- **AI21Labs**: For multilingual capabilities.
-- **AWS Speech-to-Text**: Converts spoken content from videos to text.
+- **LangChain**: html loader, text summarization and chunking, wrappers for OpenAI and Pinecone
+- **OpenAI API**: embeddings generation, retrieval
+- **Pinecone**: embeddings storage and indexing, similairty search for `top_k`
+- **PEFT**: LLaMa fine-tunning
 
 ## Installation & Setup
 
