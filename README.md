@@ -53,6 +53,6 @@ The LLM-Product-Assistant is an interactive Q&A system designed to help users to
 ## Contributors
 
 - **Sam Swain**: Project Lead
-- **Donald Li**: Generative AI Engineer
+- **Zhengyuan (Donald) Li**: Generative AI Engineer
 - **Brian Hong**: Generative AI Engineer
 - **Wencheng Zhang**: Generative AI Engineer
